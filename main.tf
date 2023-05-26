@@ -9,14 +9,14 @@ terraform {
 
   required_providers {
     aws = {
-      source  = "hashicorp/aws"
-      version = "~> 4.67.0"
+      source       = "hashicorp/aws"
+      version      = "~> 4.67.0"
     }
   }
 }
 
 provider "aws" {
-  region  = "us-east-1"
+  region           = "us-east-1"
 }
 
 locals {
@@ -24,7 +24,7 @@ locals {
 }
 
 module "application_web" {
-  source = "./modules/app"
+  source           = "./modules/app"
 
   # Input Variables
   bucket_prefix    = "web-app-{ local.environment_name }"

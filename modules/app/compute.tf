@@ -1,9 +1,9 @@
 resource "aws_instance" "instance_A" {
-  ami = var.ami
-  instance_type = var.instance_type
+  ami                     = var.ami
+  instance_type           = var.instance_type
   lifecycle {
     create_before_destroy = true
-    ignore_changes = [tags]
+    ignore_changes        = [tags]
   }
   security_groups = [aws_security_group.instances.name]
   user_data       = <<-EOF
@@ -14,8 +14,8 @@ resource "aws_instance" "instance_A" {
 }
 
 resource "aws_instance" "instance_B" {
-  ami = var.ami
-  instance_type = var.instance_type
+  ami             = var.ami
+  instance_type   = var.instance_type
   security_groups = [aws_security_group.instances.name]
   user_data       = <<-EOF
               #!/bin/bash
