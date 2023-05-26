@@ -42,7 +42,7 @@ jobs:
         id: plan
         if: github.event_name == 'pull_request'
         run: terraform plan -var db_pass=${{ secrets.DB_PASS }} -no-color
-        contunie-on-error: true
+        continue-on-error: true
 
       - uses: actions/github-script@v6
         if: github.event_name == 'pull_request'
