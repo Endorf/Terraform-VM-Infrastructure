@@ -1,7 +1,7 @@
 # Terraform-VM-Infrastructure
 
 <p align="center">
-<img src="/docs/img.png" width="200" alt="img" hspace="20">
+<img src="/docs/architecture.png" width="200" alt="architecture" hspace="20">
 </p>
 
 * Create workspaces
