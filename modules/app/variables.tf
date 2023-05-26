@@ -56,6 +56,7 @@ variable "db_pass" {
   sensitive   = true
 }
 
+
 # Route 53
 
 variable "create_dns_zone" {
