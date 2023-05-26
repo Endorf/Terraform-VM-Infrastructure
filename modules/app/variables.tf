@@ -41,13 +41,13 @@ variable "bucket_prefix" {
 variable "db_name" {
   description = "database name"
   type        = string
-  default     = "app_db"
+  default     = "appdb"
 }
 
 variable "db_user" {
   description = "database username"
   type        = string
-  default     = "admin"
+  default     = "dbuser"
 }
 
 variable "db_pass" {
@@ -59,6 +59,11 @@ variable "db_pass" {
 
 # Route 53
 
+variable "create_dns_zone" {
+  description = "If true, new route53 zone will be created"
+  type        = bool
+  default     = false
+}
 variable "create_dns_zone" {
   description = "If true, new route53 zone will be created"
   type        = bool
