@@ -55,3 +55,11 @@ variable "db_pass" {
   type        = string
   sensitive   = true
 }
+
+# Route 53
+
+variable "create_dns_zone" {
+  description = "If true, new route53 zone will be created"
+  type        = bool
+  default     = false
+}
