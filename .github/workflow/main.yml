@@ -2,8 +2,6 @@ name: Terraform CI workflow
 
 on:
   push:
-    branches:
-      - main
   pull_request:
     paths-ignore:
       - '**.md'
