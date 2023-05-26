@@ -9,12 +9,6 @@ variable "environment_name" {
 
 # Database
 
-variable "db_name" {
-  description = "database name"
-  type        = string
-  default     = "web_app_db"
-}
-
 variable "db_user" {
   description = "database username"
   type        = string
