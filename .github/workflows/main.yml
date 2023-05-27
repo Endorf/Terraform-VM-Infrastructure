@@ -63,6 +63,7 @@ jobs:
         if: github.event_name == 'push' || github.event_name == 'release'
         run: |
           terraform init
+          terraform workspace new stage
           terraform plan -var db_pass=${{ secrets.DB_PASS }} -no-color
 
       - name: Terraform test 2
