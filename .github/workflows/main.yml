@@ -65,10 +65,10 @@ jobs:
           terraform init
           terraform plan -var db_pass=${{ secrets.DB_PASS }} -no-color
 
-      - name: Terraform test 2.1
+      - name: Terraform test 2
         if: steps.check-tag.outputs.environment == 'staging' && github.event_name == 'push'
         run: |
-          terraform workspace new ${{ steps.check-tag.outputs.environment }}
+          terraform workspace select ${{ steps.check-tag.outputs.environment }}
           terraform plan -var db_pass=${{ secrets.DB_PASS }} -no-color
 
       - name: Terraform test 3
