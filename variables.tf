@@ -1,7 +1,7 @@
 # Database
 
 variable "db_user" {
-  description = "database username"
+  description = "database user name"
   type        = string
   default     = "userdb"
 }
