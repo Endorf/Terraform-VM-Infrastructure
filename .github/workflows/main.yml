@@ -52,9 +52,14 @@ jobs:
           else echo "name=environment::unknown" >> $GITHUB_OUTPUT
           fi
           
+      - name: Terraform print env
+        run: |
+          echo steps.check-tag.outputs.environment
+
       - name: Terraform test 1
         if: github.event_name == 'push' || github.event_name == 'release'
         run: |
+          echo steps.check-tag.outputs.environment
           terraform init
           terraform plan -var db_pass=${{ secrets.DB_PASS }} -no-color
 
