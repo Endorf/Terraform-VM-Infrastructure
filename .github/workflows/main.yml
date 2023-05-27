@@ -55,7 +55,7 @@ jobs:
           
       - name: Terraform print env
         run: |
-          echo "${{steps.check-tag.outputs.environment}}"
+          echo "${{steps.check-tag.outputs.environment}}, ${{ github.event_name }}"
 
       - name: Terraform test 1
         if: github.event_name == 'push' || github.event_name == 'release'
@@ -73,5 +73,5 @@ jobs:
         if: steps.check-tag.outputs.environment == 'live' && github.event_name == 'release'
         run: |
           terraform init
-          terraform workspace new ${{ steps.check-tag.outputs.environment }}
+          terraform workspace select live
           terraform plan -var db_pass=${{ secrets.DB_PASS }} -no-color
