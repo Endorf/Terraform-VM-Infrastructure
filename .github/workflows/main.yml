@@ -42,64 +42,32 @@ jobs:
         id: plan
         if: github.event_name == 'pull_request'
         run: terraform plan -var db_pass=${{ secrets.DB_PASS }} -no-color
-        continue-on-error: true
 
-      - uses: actions/github-script@v6
-        if: github.event_name == 'pull_request'
-        env:
-          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
-            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
-            #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
-            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
-
-            <details><summary>Show Plan</summary>
-
-            \`\`\`terraform\n
-            ${process.env.PLAN}
-            \`\`\`
-
-            </details>
-
-            *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
-
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: output
-            })
-      
-      - name: Terraform Plan Status
-        if: steps.plan.outcome == 'failure'
-        run: exit 1
-        
       - name: Check tag
         id: check-tag
         run: |
-          if [[ ${{ github.ref }} =~ ^refs\/tags\/v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then echo ::set-output name=environment::live
-          elif [[ ${{ github.ref }} == 'refs/heads/main' ]]; then echo ::set-output name=environment::stage
-          else echo ::set-output name=environment::unknown
+          if [[ ${{ github.ref }} =~ ^refs\/tags\/v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then echo "name=environment::live" >> $GITHUB_OUTPUT          
+          elif [[ ${{ github.ref }} == 'refs/heads/main' ]]; then echo "name=environment::stage" >> $GITHUB_OUTPUT
+          else echo "name=environment::dev" >> $GITHUB_OUTPUT
           fi
           
       - name: Terraform Apply 1
         if: github.event_name == 'push' || github.event_name == 'release'
         run: |
-          terraform init
-          terraform apply -auto-approve
+          terraform workspace new dev
+          terraform plan -var db_pass=${{ secrets.DB_PASS }} -no-color
 
       - name: Terraform Apply 2
         if: steps.check-tag.outputs.environment == 'stage' && github.event_name == 'push'
-        run: terraform apply -var db_pass=${{ secrets.DB_PASS }} -auto-approve
+        run: |
+          terraform workspace new stage
+          terraform plan -var db_pass=${{ secrets.DB_PASS }} -no-color
 
       - name: Terraform Apply 3
         if: steps.check-tag.outputs.environment == 'live' && github.event_name == 'release'
         run: |
-          terraform init
-          terraform apply -var db_pass=${{ secrets.DB_PASS }} -auto-approve
+          terraform workspace new dev
+          terraform plan -var db_pass=${{ secrets.DB_PASS }} -no-color
         
       
     
