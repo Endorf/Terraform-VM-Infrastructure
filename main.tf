@@ -23,7 +23,7 @@ locals {
   environment_name = terraform.workspace
 }
 
-module "application_web" {
+module "web_application" {
   source = "./modules/app"
 
   # Input Variables
