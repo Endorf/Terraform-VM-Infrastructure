@@ -66,7 +66,7 @@ jobs:
       - name: Terraform test 2
         if: steps.check-tag.outputs.environment == 'stage' && github.event_name == 'push'
         run: |
-          terraform workspace new ${{ steps.check-tag.outputs.environment }}
+          terraform workspace select stage
           terraform plan -var db_pass=${{ secrets.DB_PASS }} -no-color
 
       - name: Terraform test 3
