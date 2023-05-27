@@ -57,17 +57,6 @@ jobs:
           terraform workspace new dev
           terraform plan -var db_pass=${{ secrets.DB_PASS }} -no-color
 
-      - name: Terraform Apply 2
-        if: steps.check-tag.outputs.environment == 'stage' && github.event_name == 'push'
-        run: |
-          terraform workspace new stage
-          terraform plan -var db_pass=${{ secrets.DB_PASS }} -no-color
-
-      - name: Terraform Apply 3
-        if: steps.check-tag.outputs.environment == 'live' && github.event_name == 'release'
-        run: |
-          terraform workspace new dev
-          terraform plan -var db_pass=${{ secrets.DB_PASS }} -no-color
         
       
     
