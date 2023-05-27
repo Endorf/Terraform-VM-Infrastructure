@@ -54,6 +54,7 @@ jobs:
       - name: Terraform test 1
         if: github.event_name == 'push' || github.event_name == 'release'
         run: |
+          terraform init
           terraform workspace new dev
           terraform plan -var db_pass=${{ secrets.DB_PASS }} -no-color
 
@@ -66,6 +67,7 @@ jobs:
       - name: Terraform test 3
         if: steps.check-tag.outputs.environment == 'live' && github.event_name == 'release'
         run: |
+          terraform init
           terraform workspace new dev
           terraform plan -var db_pass=${{ secrets.DB_PASS }} -no-color
         
