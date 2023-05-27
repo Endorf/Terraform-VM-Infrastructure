@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - test-workflow
   pull_request:
     paths-ignore:
       - '**.md'
@@ -50,6 +51,7 @@ jobs:
         run: |
           if [[ ${{ github.ref }} =~ ^refs\/tags\/v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then echo "environment=live" >> $GITHUB_OUTPUT          
           elif [[ ${{ github.ref }} == 'refs/heads/main' ]]; then echo "environment=stage" >> $GITHUB_OUTPUT
+          elif [[ ${{ github.ref }} == 'refs/heads/test-workflow' ]]; then echo "environment=stage" >> $GITHUB_OUTPUT
           else echo "environment=unknown" >> $GITHUB_OUTPUT
           fi
           
@@ -66,7 +68,6 @@ jobs:
       - name: Terraform test 2
         if: steps.check-tag.outputs.environment == 'stage' && github.event_name == 'push'
         run: |
-          terraform workspace new ${{ steps.check-tag.outputs.environment }}
           terraform plan -var db_pass=${{ secrets.DB_PASS }} -no-color
 
       - name: Terraform test 3
