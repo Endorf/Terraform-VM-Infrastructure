@@ -54,4 +54,4 @@ jobs:
           
       - name: Terraform print env
         run: |
-          echo ${{steps.check-tag.outputs.environment}}
+          echo "${{steps.check-tag.outputs.*}}"
