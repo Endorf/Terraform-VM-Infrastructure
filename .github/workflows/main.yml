@@ -77,5 +77,5 @@ jobs:
         if: steps.check-tag.outputs.environment == 'live' && github.event_name == 'release'
         run: |
           terraform init
-          terraform workspace new live
+          terraform workspace select live
           terraform plan -var db_pass=${{ secrets.DB_PASS }} -no-color
