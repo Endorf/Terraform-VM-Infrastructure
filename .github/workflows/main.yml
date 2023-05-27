@@ -61,7 +61,7 @@ jobs:
         run: |
           echo "${{ github.event_name }}"
 
-      - name: Terraform Apply Default
+      - name: Terraform Apply Dev
         if: github.event_name == 'push' || github.event_name == 'release'
         run: |
           terraform init
