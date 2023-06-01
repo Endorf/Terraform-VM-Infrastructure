@@ -3,7 +3,7 @@
 variable "db_user" {
   description = "database username"
   type        = string
-  default     = "userdb"
+  default     = "userdb-test"
 }
 
 variable "db_pass" {
