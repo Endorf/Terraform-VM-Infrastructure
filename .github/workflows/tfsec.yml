@@ -1,0 +1,24 @@
+name: Build and Test
+on:
+  pull_request:
+    paths-ignore:
+      - '**.md'
+
+
+jobs:
+  tfsec:
+    name: tfsec sarif report
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@v3
+
+      - name: tfsec
+        uses: aquasecurity/tfsec-pr-commenter-action@v1.2.0
+        with:
+          github_token: ${{ github.token }}
