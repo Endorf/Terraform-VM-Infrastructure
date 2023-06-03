@@ -1,21 +1,19 @@
-resource "aws_vpc" "vpc" {
-  cidr_block       = "10.0.0.0/16"
+module "vpc" {
+  source = "../vpc"
 
-  tags = {
-    Name = var.app_name
-  }
+  app_name         = var.app_name
+  environment_name = var.environment_name
+  cidr_block = "10.0.0.0/16"
 }
-
-
 
 module "lb" {
   source = "../lb"
 
   app_name         = var.app_name
   environment_name = var.environment_name
-  vpc_id = aws_vpc.vpc.id
-  public_security_group_id = aws_security_group.alb.id
-  public_subnet_ids = [aws_subnet.public_subnet1.id, aws_subnet.public_subnet2.id]
+  vpc_id = module.vpc.vpc_id
+  public_security_group_id = module.vpc.alb_security_group_id
+  public_subnet_ids = [module.vpc.subnets_A.public.id, module.vpc.subnets_B.public.id]
 }
 
 resource "aws_lb_target_group_attachment" "instance_A" {
