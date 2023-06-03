@@ -13,7 +13,6 @@ resource "aws_instance" "instance_A" {
 resource "aws_instance" "instance_B" {
   ami             = var.ami
   instance_type   = var.instance_type
-  security_groups = [aws_security_group.instances.name]
   security_groups = [aws_security_group.sg.id]
   subnet_id = aws_subnet.private_subnet2.id
   user_data       = <<-EOF
