@@ -1,11 +1,8 @@
 resource "aws_instance" "instance_A" {
   ami                     = var.ami
   instance_type           = var.instance_type
-  lifecycle {
-    create_before_destroy = true
-    ignore_changes        = [tags]
-  }
-  security_groups = [aws_security_group.instances.name]
+  subnet_id = aws_subnet.private_subnet1.id
+  security_groups = [aws_security_group.sg.id]
   user_data       = <<-EOF
               #!/bin/bash
               echo "Hello, World from instance_A" > index.html
@@ -17,6 +14,8 @@ resource "aws_instance" "instance_B" {
   ami             = var.ami
   instance_type   = var.instance_type
   security_groups = [aws_security_group.instances.name]
+  security_groups = [aws_security_group.sg.id]
+  subnet_id = aws_subnet.private_subnet2.id
   user_data       = <<-EOF
               #!/bin/bash
               echo "Hello, World from instance_B" > index.html
