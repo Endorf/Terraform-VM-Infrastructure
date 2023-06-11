@@ -30,6 +30,16 @@ module "ec2" {
   instance_type = var.instance_type
   ami = var.ami
   alb_target_group_arn = module.lb.lb_target_group_arn
-  ec2_role_policy = file("${path.module}/aws_iam_policies/ec2_role_policy.json")
-  ec2_iam_policy = file("${path.module}/aws_iam_policies/ec2_iam_policy.json")
+}
+
+module "codedeploy" {
+  source = "../codedeploy"
+
+  app_name         = var.app_name
+  environment_name = "dev" #var.environment_name
+  prefix = var.app_name
+  aws_autoscaling_group = module.ec2.autoscaling_group
+
+  aws_iam_worker_policy = module.ec2.aws_iam_worker_policy
+  aws_iam_worker_role = module.ec2.aws_iam_worker_role
 }
