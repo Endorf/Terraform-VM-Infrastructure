@@ -19,7 +19,3 @@ variable "ami" {}
 variable "prefix" {}
 
 variable "alb_target_group_arn" {}
-
-variable "ec2_role_policy" {}
-
-variable "ec2_iam_policy" {}

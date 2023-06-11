@@ -1,3 +1,10 @@
 #!/bin/bash
-echo "Hello, World from instance_C2" > index.html
-python3 -m http.server 8080 &
+yum -y update
+yum -y install ruby
+yum -y install wget
+
+cd /home/ec2-user
+wget https://aws-codedeploy-us-east-1.s3.us-east-1.amazonaws.com/latest/install
+chmod +x ./install
+./install auto
+service codedeploy-agent start
