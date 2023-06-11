@@ -30,4 +30,6 @@ module "ec2" {
   instance_type = var.instance_type
   ami = var.ami
   alb_target_group_arn = module.lb.lb_target_group_arn
+  ec2_role_policy = file("${path.module}/aws_iam_policies/ec2_role_policy.json")
+  ec2_iam_policy = file("${path.module}/aws_iam_policies/ec2_iam_policy.json")
 }
