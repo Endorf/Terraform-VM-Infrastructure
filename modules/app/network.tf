@@ -16,14 +16,18 @@ module "lb" {
   public_subnet_ids = [module.vpc.subnets_A.public.id, module.vpc.subnets_B.public.id]
 }
 
-resource "aws_lb_target_group_attachment" "instance_A" {
-  target_group_arn    = module.lb.lb_target_group_arn
-  target_id           = aws_instance.instance_A.id
-  port                = 8080
-}
+module "ec2" {
+  source = "../ec2"
 
-resource "aws_lb_target_group_attachment" "instance_B" {
-  target_group_arn    = module.lb.lb_target_group_arn
-  target_id           = aws_instance.instance_B.id
-  port                = 8080
+  app_name         = var.app_name
+  environment_name = var.environment_name
+  prefix = var.app_name
+  desired_capacity = 1
+  max_size = 2
+  min_size = 1
+  subnet_ids = [module.vpc.subnets_A.public.id, module.vpc.subnets_B.public.id]
+  security_group_id = module.vpc.instance_security_group_id
+  instance_type = var.instance_type
+  ami = var.ami
+  alb_target_group_arn = module.lb.lb_target_group_arn
 }
