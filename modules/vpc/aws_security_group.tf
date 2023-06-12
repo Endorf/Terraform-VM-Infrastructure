@@ -1,7 +1,7 @@
 
 
 resource "aws_security_group" "alb" {
-  name                = "${ var.app_name }-${ var.environment_name }-alb-security-group"
+  name   = "${var.app_name}-${var.environment_name}-alb-security-group"
   vpc_id = aws_vpc.vpc.id
 
   ingress {
@@ -37,7 +37,7 @@ resource "aws_security_group" "instance" {
     aws_subnet.private_subnet2
   ]
 
-  name                = "${ var.app_name }-${ var.environment_name }-instance-security-group"
+  name   = "${var.app_name}-${var.environment_name}-instance-security-group"
   vpc_id = aws_vpc.vpc.id
 
   ingress {

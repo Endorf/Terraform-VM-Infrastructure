@@ -1,5 +1,5 @@
 resource "aws_autoscaling_policy" "worker_ec2" {
-  name                   = "${ var.prefix }-worker-ec2"
+  name                   = "${var.prefix}-worker-ec2"
   scaling_adjustment     = 1
   policy_type            = "SimpleScaling"
   adjustment_type        = "ChangeInCapacity"
