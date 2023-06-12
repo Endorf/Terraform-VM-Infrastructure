@@ -1,6 +1,6 @@
 # Environment
 
-variable "environment_name" {
+variable "environment" {
   description = "Deployment environment (dev/stage/live)"
   type        = string
   default     = "dev"
@@ -18,7 +18,7 @@ variable "app_name" {
 variable "ami" {
   description = "amazon ec2 instance"
   type        = string
-  default     = "ami-0715c1897453cabd1"
+  default     = "ami-04a0ae173da5807d3"
 }
 
 variable "instance_type" {

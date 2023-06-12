@@ -1,126 +1,45 @@
-data "aws_vpc" "default_vpc" {
-  default             = true
+module "vpc" {
+  source = "../vpc"
+
+  app_name         = var.app_name
+  environment = var.environment
+  cidr_block       = "10.0.0.0/16"
 }
 
-data "aws_subnets" "default_subnet" {
-    filter {
-        name          = "vpc-id"
-        values        = [data.aws_vpc.default_vpc.id]
-    }
+module "lb" {
+  source = "../lb"
+
+  app_name                 = var.app_name
+  environment         = var.environment
+  vpc_id                   = module.vpc.vpc_id
+  public_security_group_id = module.vpc.alb_security_group_id
+  public_subnet_ids        = [module.vpc.subnets_A.public.id, module.vpc.subnets_B.public.id]
 }
 
+module "ec2" {
+  source = "../ec2"
 
-
-# Security Groups
-
-resource "aws_security_group" "instances" {
-  name                = "${ var.app_name }-${ var.environment_name }-instance-security-group"
+  app_name             = var.app_name
+  environment     = var.environment
+  prefix               = var.app_name
+  desired_capacity     = 1
+  max_size             = 2
+  min_size             = 1
+  subnet_ids           = [module.vpc.subnets_A.public.id, module.vpc.subnets_B.public.id]
+  security_group_id    = module.vpc.instance_security_group_id
+  instance_type        = var.instance_type
+  ami                  = var.ami
+  alb_target_group_arn = module.lb.lb_target_group_arn
 }
 
-resource "aws_security_group" "alb" {
-  name                = "${ var.app_name }-${ var.environment_name }-alb-security-group"
-}
+module "codedeploy" {
+  source = "../codedeploy"
 
-resource "aws_security_group_rule" "allow_http_inbound" {
-  type                = "ingress"
-  security_group_id   = aws_security_group.instances.id
+  app_name              = var.app_name
+  environment           = var.environment
+  prefix                = var.app_name
+  aws_autoscaling_group = module.ec2.autoscaling_group
 
-  from_port           = 8080
-  to_port             = 8080
-  protocol            = "tcp"
-  cidr_blocks         = ["0.0.0.0/0"]
-}
-
-resource "aws_security_group_rule" "allow_alb_http_inbound" {
-  type                = "ingress"
-  security_group_id   = aws_security_group.alb.id
-
-  from_port           = 80
-  to_port             = 80
-  protocol            = "tcp"
-  cidr_blocks         = ["0.0.0.0/0"]
-}
-
-resource "aws_security_group_rule" "allow_alb_all_outbound" {
-  type                = "egress"
-  security_group_id   = aws_security_group.alb.id
-
-  from_port           = 0
-  to_port             = 0
-  protocol            = "-1"
-  cidr_blocks         = ["0.0.0.0/0"]
-}
-
-
-
-# Load Balancer
-
-resource "aws_lb" "load_balancer" {
-  name                = "${ var.app_name }-${ var.environment_name }-lb"
-  load_balancer_type  = "application"
-  subnets             = data.aws_subnets.default_subnet.ids
-  security_groups     = [aws_security_group.alb.id]
-}
-
-resource "aws_lb_target_group" "instances" {
-  name                = "${ var.app_name }-${ var.environment_name }-tg"
-  port                = 8080
-  protocol            = "HTTP"
-  vpc_id              = data.aws_vpc.default_vpc.id
-
-  health_check {
-    path                = "/"
-    protocol            = "HTTP"
-    matcher             = "200"
-    interval            = 15
-    timeout             = 3
-    healthy_threshold   = 2
-    unhealthy_threshold = 2
-  }
-}
-
-resource "aws_lb_listener" "http" {
-  load_balancer_arn   = aws_lb.load_balancer.arn
-
-  port                = 80
-  protocol            = "HTTP"
-
-  # By default, return a simple 404 page
-  default_action {
-    type              = "fixed-response"
-
-    fixed_response {
-      content_type    = "text/plain"
-      message_body    = "404: page not found"
-      status_code     = 404
-    }
-  }
-}
-
-resource "aws_lb_target_group_attachment" "instance_A" {
-  target_group_arn    = aws_lb_target_group.instances.arn
-  target_id           = aws_instance.instance_A.id
-  port                = 8080
-}
-
-resource "aws_lb_target_group_attachment" "instance_B" {
-  target_group_arn    = aws_lb_target_group.instances.arn
-  target_id           = aws_instance.instance_B.id
-  port                = 8080
-}
-
-resource "aws_lb_listener_rule" "instances" {
-  listener_arn        = aws_lb_listener.http.arn
-  priority            = 100
-
-  condition {
-    path_pattern {
-      values = ["*"]
-    }
-  }
-
-  action {
-    type              = "forward"
-    target_group_arn  = aws_lb_target_group.instances.arn
-  }
+  aws_iam_worker_policy = module.ec2.aws_iam_worker_policy
+  aws_iam_worker_role   = module.ec2.aws_iam_worker_role
 }
