@@ -1,5 +1,5 @@
 variable "cidr_block" {}
 
-variable "environment_name" {}
+variable "environment" {}
 
 variable "app_name" {}

@@ -1,6 +1,6 @@
 # Environment
 
-variable "environment_name" {
+variable "environment" {
   description = "Deployment environment (dev/stage/live)"
   type        = string
   default     = "dev"

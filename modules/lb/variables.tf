@@ -9,6 +9,6 @@ variable "public_security_group_id" {
   type        = string
 }
 
-variable "environment_name" {}
+variable "environment" {}
 
 variable "app_name" {}

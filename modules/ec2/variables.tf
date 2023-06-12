@@ -1,4 +1,4 @@
-variable "environment_name" {}
+variable "environment" {}
 
 variable "app_name" {}
 

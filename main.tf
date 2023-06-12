@@ -20,19 +20,19 @@ provider "aws" {
 }
 
 locals {
-  environment_name = terraform.workspace
+  environment = terraform.workspace
 }
 
 module "web_application" {
   source = "./modules/app"
 
   # Input Variables
-  bucket_prefix    = "web-app-${local.environment_name}"
+  bucket_prefix    = "web-app-${local.environment}"
   app_name         = "web-app"
-  environment_name = local.environment_name
+  environment = local.environment
   create_dns_zone  = terraform.workspace == "live" ? true : false
   instance_type    = "t3.micro"
-  db_name          = "webapp${local.environment_name}db"
+  db_name          = "webapp${local.environment}db"
   db_user          = var.db_user
   db_pass          = var.db_pass
 }

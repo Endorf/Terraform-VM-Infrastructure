@@ -1,5 +1,5 @@
 resource "aws_lb" "public" {
-  name               = "${var.app_name}-${var.environment_name}-lb"
+  name               = "${var.app_name}-${var.environment}-lb"
   load_balancer_type = "application"
   internal           = false
   subnets            = var.public_subnet_ids

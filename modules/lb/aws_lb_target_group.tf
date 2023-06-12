@@ -2,7 +2,7 @@ resource "aws_lb_target_group" "instances" {
 
   depends_on = [aws_lb.public]
 
-  name   = "${var.app_name}-${var.environment_name}-tg"
+  name   = "${var.app_name}-${var.environment}-tg"
   vpc_id = var.vpc_id
 
   port     = 8080
