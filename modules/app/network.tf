@@ -36,7 +36,7 @@ module "codedeploy" {
   source = "../codedeploy"
 
   app_name              = var.app_name
-  environment      = "dev" #var.environment
+  environment           = var.environment
   prefix                = var.app_name
   aws_autoscaling_group = module.ec2.autoscaling_group
 

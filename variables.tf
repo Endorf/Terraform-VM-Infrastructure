@@ -1,3 +1,12 @@
+# Environment
+
+variable "environment" {
+  description = "Deployment environment (dev/stage/live)"
+  type        = string
+  default     = "dev"
+}
+
+
 # Database
 
 variable "db_user" {
