@@ -65,17 +65,16 @@ jobs:
         if: github.event_name == 'push' || github.event_name == 'release'
         run: |
           terraform init
-          # terraform apply
+          # terraform apply -auto-approve
 
       - name: Terraform Apply Stage
         if: steps.check-tag.outputs.environment == 'stage' && github.event_name == 'push'
         run: |
-          terraform workspace select stage
-          # terraform apply
+          terraform init
+          # terraform apply -var="environment=${{steps.check-tag.outputs.environment}}" -auto-approve
 
       - name: Terraform Apply Production
         if: steps.check-tag.outputs.environment == 'live' && github.event_name == 'release'
         run: |
           terraform init
-          terraform workspace select live
-          # terraform apply -auto-approve
+          # terraform apply -var="environment=${{steps.check-tag.outputs.environment}}" -auto-approve
