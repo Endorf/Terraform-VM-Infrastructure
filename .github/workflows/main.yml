@@ -53,10 +53,6 @@ jobs:
           else echo "environment=unknown" >> $GITHUB_OUTPUT
           fi
           
-      - name: Terraform print env
-        run: |
-          echo "${{steps.check-tag.outputs.environment}}, ${{ github.event_name }}"
-      
       - name: Terraform print event
         run: |
           echo "${{ github.event_name }}"
