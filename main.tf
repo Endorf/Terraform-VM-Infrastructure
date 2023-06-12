@@ -23,12 +23,12 @@ module "web_application" {
   source = "./modules/app"
 
   # Input Variables
-  bucket_prefix    = "web-app-${var.environment}"
-  app_name         = "web-app"
-  environment      = var.environment
-  create_dns_zone  = terraform.workspace == "live" ? true : false
-  instance_type    = "t3.micro"
-  db_name          = "${var.environment}webappdb"
-  db_user          = var.db_user
-  db_pass          = var.db_pass
+  bucket_prefix   = "web-app-${var.environment}"
+  app_name        = "web-app"
+  environment     = var.environment
+  create_dns_zone = terraform.workspace == "live" ? true : false
+  instance_type   = "t3.micro"
+  db_name         = "${var.environment}webappdb"
+  db_user         = var.db_user
+  db_pass         = var.db_pass
 }
