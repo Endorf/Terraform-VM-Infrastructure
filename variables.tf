@@ -19,5 +19,4 @@ variable "db_pass" {
   description = "database password"
   type        = string
   sensitive   = true
-  default     = "asdkj_=lsdfkj123"
 }
