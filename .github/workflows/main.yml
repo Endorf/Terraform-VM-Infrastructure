@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - scanner-tfsec
   pull_request:
     paths-ignore:
       - '**.md'
