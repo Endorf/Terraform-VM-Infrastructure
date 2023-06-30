@@ -9,7 +9,8 @@ resource "aws_internet_gateway" "nat_gateway" {
 resource "aws_route_table" "nat_gateway" {
   vpc_id = aws_vpc.vpc.id
   route {
-    cidr_block = "0.0.0.0/0"
+    #tfsec:ignore:aws-vpc-no-public-ingress-sgr:exp:2023-07-24
+    cidr_block = "0.0.0.0/0"                      
     gateway_id = aws_internet_gateway.nat_gateway.id
   }
 }
