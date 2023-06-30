@@ -7,9 +7,14 @@ resource "aws_launch_configuration" "worker" {
 
   user_data = file("${path.module}/aws_launch_configuration_userdata/worker.sh")
 
-  associate_public_ip_address = true
-
+  # associate_public_ip_address = true
+  metadata_options {
+    http_tokens = "optional" #tfsec:ignore:aws-ec2-enforce-launch-config-http-token-imds:exp:2023-10-24
+  } 
   lifecycle {
     create_before_destroy = true
+  }
+  root_block_device {
+    encrypted = true
   }
 }
